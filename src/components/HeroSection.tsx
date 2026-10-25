@@ -227,7 +227,7 @@ export default function HeroSection() {
             >
               <div className="relative aspect-4/5 overflow-hidden rounded-2xl bg-slate-950">
                 <Image
-                  src="/HeroSection1.png"
+                  src="/hero-img.jpg"
                   alt="Swagata Mondal - Aspiring Full-Stack Developer"
                   fill
                   priority
