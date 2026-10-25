@@ -1,9 +1,24 @@
-import React from "react";
 
-export function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
+import React from "react";
+import { Mail } from "lucide-react";
+
+interface IconProps {
+  className?: string;
+}
+
+interface SocialIconsProps {
+  github: string;
+  linkedin: string;
+  email: string;
+}
+
+export function GithubIcon({
+  className = "w-4 h-4",
+}: IconProps) {
   return (
     <svg
       role="img"
+      aria-label="GitHub"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -18,10 +33,13 @@ export function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
   );
 }
 
-export function LinkedinIcon({ className = "w-4 h-4" }: { className?: string }) {
+export function LinkedinIcon({
+  className = "w-4 h-4",
+}: IconProps) {
   return (
     <svg
       role="img"
+      aria-label="LinkedIn"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -37,10 +55,13 @@ export function LinkedinIcon({ className = "w-4 h-4" }: { className?: string }) 
   );
 }
 
-export function TwitterIcon({ className = "w-4 h-4" }: { className?: string }) {
+export function TwitterIcon({
+  className = "w-4 h-4",
+}: IconProps) {
   return (
     <svg
       role="img"
+      aria-label="Twitter"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -51,5 +72,46 @@ export function TwitterIcon({ className = "w-4 h-4" }: { className?: string }) {
     >
       <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
     </svg>
+  );
+}
+
+export default function SocialIcons({
+  github,
+  linkedin,
+  email,
+}: SocialIconsProps) {
+  const linkClass =
+    "inline-flex items-center justify-center rounded-full border border-white/10 p-3 text-gray-300 transition-all duration-300 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:text-cyan-400";
+
+  return (
+    <div className="flex items-center gap-3">
+      <a
+        href={github}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub profile"
+        className={linkClass}
+      >
+        <GithubIcon className="h-5 w-5" />
+      </a>
+
+      <a
+        href={linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="LinkedIn profile"
+        className={linkClass}
+      >
+        <LinkedinIcon className="h-5 w-5" />
+      </a>
+
+      <a
+        href={email}
+        aria-label="Send email"
+        className={linkClass}
+      >
+        <Mail className="h-5 w-5" />
+      </a>
+    </div>
   );
 }
