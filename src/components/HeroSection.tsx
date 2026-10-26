@@ -1,10 +1,9 @@
-
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowDown, ArrowRight, Code, Cpu } from "lucide-react";
 import SocialIcons from "@/components/SocialIcons";
 
 export default function HeroSection() {
@@ -82,7 +81,7 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        {/* Right: Profile image */}
+        {/* Right: Profile image with all floating badges */}
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -103,13 +102,36 @@ export default function HeroSection() {
               />
             </div>
 
-            <div className="absolute -bottom-5 -left-5 rounded-2xl border border-white/10 bg-zinc-900/90 px-5 py-3 shadow-xl backdrop-blur">
+            {/* 1. Top-Left Floating Badge (Focus & Goal) */}
+            <div className="absolute -top-6 -left-6 flex items-center gap-3 rounded-2xl border border-white/10 bg-zinc-900/90 px-4 py-3 shadow-xl backdrop-blur z-20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-400">
+                <Code size={20} />
+              </div>
+              <div>
+                <p className="text-xs text-zinc-400">Focus & Goal</p>
+                <p className="text-sm font-semibold text-white">Full-Stack Developer</p>
+              </div>
+            </div>
+
+            {/* 2. Bottom-Left Card (Computer Engineering) */}
+            <div className="absolute -bottom-5 -left-5 rounded-2xl border border-white/10 bg-zinc-900/90 px-5 py-3 shadow-xl backdrop-blur z-20">
               <p className="text-sm font-semibold text-white">
                 Computer Engineering
               </p>
               <p className="mt-1 text-xs text-zinc-400">
                 Learning · Building · Growing
               </p>
+            </div>
+
+            {/* 3. Bottom-Right Floating Badge (Design) */}
+            <div className="absolute -bottom-6 -right-6 flex items-center gap-3 rounded-2xl border border-white/10 bg-zinc-900/90 px-4 py-3 shadow-xl backdrop-blur z-20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-400">
+                <Cpu size={20} />
+              </div>
+              <div>
+                <p className="text-xs text-zinc-400">Design</p>
+                <p className="text-sm font-semibold text-white">Modern & Responsive</p>
+              </div>
             </div>
           </div>
         </motion.div>

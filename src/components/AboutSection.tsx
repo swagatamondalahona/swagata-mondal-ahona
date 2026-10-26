@@ -92,8 +92,8 @@ export default function AboutSection() {
       transition: shouldReduceMotion
         ? { duration: 0 }
         : {
-            staggerChildren: 0.1,
-          },
+          staggerChildren: 0.1,
+        },
     },
   };
 
@@ -105,9 +105,9 @@ export default function AboutSection() {
       transition: shouldReduceMotion
         ? { duration: 0 }
         : {
-            duration: 0.5,
-            ease: [0.22, 1, 0.36, 1] as const,
-          },
+          duration: 0.5,
+          ease: [0.22, 1, 0.36, 1] as const,
+        },
     },
   };
 
@@ -142,7 +142,7 @@ export default function AboutSection() {
               <div className="relative aspect-4/3 sm:aspect-4/4 rounded-2xl overflow-hidden bg-slate-950">
                 <Image
                   src="/AboutSection.png"
-                  alt="Rijon Chandra Swarnaker - Development Journey"
+                  alt="Swagata Mondal Ahona - Development Journey"
                   fill
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
                   sizes="(max-width: 768px) 100vw, 480px"
@@ -368,10 +368,10 @@ export default function AboutSection() {
             })}
           </motion.div>
         </div>
-        
+
       </div>
-      <EducationSection/>
+      <EducationSection />
     </section>
-    
+
   );
 }
