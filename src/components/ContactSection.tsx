@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -49,34 +50,56 @@ export default function ContactSection() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [copiedEmail, setCopiedEmail] = useState(false);
 
-  const contactEmail = "rijonswarnaker@gmail.com";
-  const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/rijon-swarnaker";
-  const linkedinUrl = process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com/in/rijon-swarnaker/";
+  // Personal Contact Information
+  const contactEmail = "swagatamondal682@gmail.com";
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(contactEmail);
-    setCopiedEmail(true);
-    setTimeout(() => setCopiedEmail(false), 2000);
+  const githubUrl =
+    process.env.NEXT_PUBLIC_GITHUB_URL ||
+    "https://github.com/swagatamondalahona";
+
+  const linkedinUrl =
+    process.env.NEXT_PUBLIC_LINKEDIN_URL ||
+    "https://www.linkedin.com/in/swagatamondalahona/";
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(contactEmail);
+      setCopiedEmail(true);
+      window.setTimeout(() => setCopiedEmail(false), 2000);
+    } catch {
+      setServerError("Unable to copy email. Please copy it manually.");
+    }
   };
 
-  const validateField = (field: keyof FormData, value: string): string | undefined => {
+  const validateField = (
+    field: keyof FormData,
+    value: string
+  ): string | undefined => {
     switch (field) {
       case "name":
         if (!value.trim()) return "Full name is required.";
-        if (value.trim().length < 2) return "Name must be at least 2 characters.";
+        if (value.trim().length < 2)
+          return "Name must be at least 2 characters.";
         return undefined;
+
       case "email":
         if (!value.trim()) return "Email address is required.";
-        if (!EMAIL_REGEX.test(value.trim())) return "Please enter a valid email address.";
+        if (!EMAIL_REGEX.test(value.trim()))
+          return "Please enter a valid email address.";
         return undefined;
+
       case "subject":
         if (!value.trim()) return "Subject is required.";
-        if (value.trim().length < 3) return "Subject must be at least 3 characters.";
+        if (value.trim().length < 3)
+          return "Subject must be at least 3 characters.";
         return undefined;
+
       case "message":
         if (!value.trim()) return "Message is required.";
-        if (value.trim().length < 10) return "Message must be at least 10 characters.";
+        if (value.trim().length < 10)
+          return "Message must be at least 10 characters.";
         return undefined;
+
       default:
         return undefined;
     }
@@ -96,18 +119,25 @@ export default function ContactSection() {
 
   const handleBlur = (field: keyof FormData) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
+
     const error = validateField(field, formData[field]);
+
     setErrors((prev) => ({ ...prev, [field]: error }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Mark all as touched
-    const allTouched = { name: true, email: true, subject: true, message: true };
-    setTouched(allTouched);
+    setServerError(null);
+    setServerSuccess(null);
 
-    // Validate all fields
+    setTouched({
+      name: true,
+      email: true,
+      subject: true,
+      message: true,
+    });
+
     const newErrors: FormErrors = {
       name: validateField("name", formData.name),
       email: validateField("email", formData.email),
@@ -117,14 +147,9 @@ export default function ContactSection() {
 
     setErrors(newErrors);
 
-    // Check if any error exists
-    if (Object.values(newErrors).some(Boolean)) {
-      return;
-    }
+    if (Object.values(newErrors).some(Boolean)) return;
 
     setIsSubmitting(true);
-    setServerError(null);
-    setServerSuccess(null);
 
     try {
       const response = await fetch("/api/contact", {
@@ -132,89 +157,132 @@ export default function ContactSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+        }),
       });
 
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to deliver message. Please try again.");
+        throw new Error(
+          data.error || "Failed to deliver message. Please try again."
+        );
       }
 
-      setServerSuccess(data.message || "Your message has been sent successfully!");
-      setFormData({ name: "", email: "", subject: "", message: "" });
+      setServerSuccess(
+        data.message || "Your message has been sent successfully!"
+      );
+
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+
       setTouched({});
       setErrors({});
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setServerError(err.message);
-      } else {
-        setServerError("An unexpected error occurred. Please try again.");
-      }
+      setServerError(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  return (
-    <section id="contact" className="py-15 relative overflow-hidden bg-slate-950/70 scroll-mt-20">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+  const inputClass = (field: keyof FormData) =>
+    `w-full px-4 py-3.5 rounded-xl bg-slate-950 border text-white placeholder-slate-500 text-sm transition-all duration-200 focus:outline-none ${errors[field]
+      ? "border-rose-500/70 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
+      : "border-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+    }`;
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  return (
+    <section
+      id="contact"
+      className="relative scroll-mt-20 overflow-hidden bg-slate-950/70 py-15"
+    >
+      {/* Background Lighting */}
+      <div className="pointer-events-none absolute left-1/4 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-cyan-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-10 right-1/4 h-80 w-80 rounded-full bg-blue-600/10 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <motion.div
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
-          whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+          initial={
+            shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }
+          }
+          whileInView={
+            shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }
+          }
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          className="mx-auto mb-16 max-w-3xl text-center"
         >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-500/10 border border-cyan-500/25 text-cyan-400 mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-500/25 bg-cyan-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-cyan-400">
+            <Sparkles className="h-3.5 w-3.5" />
             <span>GET IN TOUCH</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-Exo lg:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+
+          <h2 className="mb-4 font-Exo text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
             Let&apos;s Build Something{" "}
             <span className="bg-linear-to-r from-cyan-400 via-sky-300 to-blue-500 bg-clip-text text-transparent">
               Great Together
             </span>
           </h2>
-          <p className="text-slate-300 font-Space-Grotesk text-base sm:text-lg leading-relaxed">
-            Have a project idea, collaboration opportunity, or just want to connect? Feel free to reach out.
+
+          <p className="font-Space-Grotesk text-base leading-relaxed text-slate-300 sm:text-lg">
+            Have a project idea, collaboration opportunity, or just want to
+            connect? Feel free to reach out.
           </p>
         </motion.div>
 
-        {/* Two-Column Responsive Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Contact Information Cards */}
+        {/* Responsive Two-Column Layout */}
+        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
+          {/* Left Column */}
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -30 }}
-            whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+            initial={
+              shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -30 }
+            }
+            whileInView={
+              shouldReduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 }
+            }
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-5 space-y-6"
+            className="space-y-6 lg:col-span-5"
           >
-            {/* Primary Email Card */}
-            <div className="rounded-3xl bg-slate-900/70 border border-slate-800 p-6 sm:p-8 backdrop-blur-md shadow-xl">
-              <h3 className="text-xl font-bold font-Exo text-white mb-2">Direct Contact</h3>
-              <p className="text-sm font-Space-Grotesk text-slate-400 mb-6 leading-relaxed">
+            {/* Direct Contact */}
+            <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl backdrop-blur-md sm:p-8">
+              <h3 className="mb-2 font-Exo text-xl font-bold text-white">
+                Direct Contact
+              </h3>
+
+              <p className="mb-6 font-Space-Grotesk text-sm leading-relaxed text-slate-400">
                 Send an email directly or copy the address to your clipboard.
               </p>
 
               <div className="space-y-4">
-                {/* Email Box */}
-                <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80">
-                  <div className="flex items-center gap-3 overflow-hidden">
-                    <div className="w-10 h-10 rounded-xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center shrink-0">
-                      <Mail className="w-5 h-5" />
+                {/* Email */}
+                <div className="flex items-center justify-between rounded-2xl border border-slate-800/80 bg-slate-950/80 p-4">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-400">
+                      <Mail className="h-5 w-5" />
                     </div>
+
                     <div className="min-w-0">
-                      <p className="text-xs font-Exo text-slate-400">Personal Email</p>
+                      <p className="font-Exo text-xs text-slate-400">
+                        Personal Email
+                      </p>
+
                       <a
                         href={`mailto:${contactEmail}`}
-                        className="text-sm font-Exo font-semibold text-white hover:text-cyan-400 transition-colors truncate block"
+                        className="block truncate font-Exo text-sm font-semibold text-white transition-colors hover:text-cyan-400"
                       >
                         {contactEmail}
                       </a>
@@ -222,50 +290,62 @@ export default function ContactSection() {
                   </div>
 
                   <motion.button
+                    type="button"
                     whileTap={shouldReduceMotion ? {} : { scale: 0.92 }}
                     onClick={handleCopyEmail}
-                    className="p-2.5 rounded-xl bg-slate-850 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors shrink-0 ml-2"
+                    className="ml-2 shrink-0 rounded-xl bg-slate-800 p-2.5 text-slate-300 transition-colors hover:bg-slate-700 hover:text-white"
                     title="Copy Email Address"
                     aria-label="Copy Email Address"
                   >
                     {copiedEmail ? (
-                      <Check className="w-4 h-4 text-emerald-400" />
+                      <Check className="h-4 w-4 text-emerald-400" />
                     ) : (
-                      <Copy className="w-4 h-4" />
+                      <Copy className="h-4 w-4" />
                     )}
                   </motion.button>
                 </div>
 
-                {/* Location Box */}
-                <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center shrink-0">
-                    <MapPin className="w-5 h-5" />
+                {/* Location */}
+                <div className="flex items-center gap-3 rounded-2xl border border-slate-800/80 bg-slate-950/80 p-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/15 text-blue-400">
+                    <MapPin className="h-5 w-5" />
                   </div>
+
                   <div>
-                    <p className="text-xs font-Exo text-slate-400">Location</p>
-                    <p className="text-sm font-Exo font-semibold text-white">Bangladesh • Available Globally</p>
+                    <p className="font-Exo text-xs text-slate-400">
+                      Location
+                    </p>
+                    <p className="font-Exo text-sm font-semibold text-white">
+                      Bangladesh • Available Globally
+                    </p>
                   </div>
                 </div>
 
-                {/* Response Time Box */}
-                <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
-                    <Clock className="w-5 h-5" />
+                {/* Availability */}
+                <div className="flex items-center gap-3 rounded-2xl border border-slate-800/80 bg-slate-950/80 p-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400">
+                    <Clock className="h-5 w-5" />
                   </div>
+
                   <div>
-                    <p className="text-xs font-Exo text-slate-400">Availability</p>
-                    <p className="text-sm font-Exo font-semibold text-white">Responses within 24 Hours</p>
+                    <p className="font-Exo text-xs text-slate-400">
+                      Availability
+                    </p>
+                    <p className="font-Exo text-sm font-semibold text-white">
+                      Responses within 24 Hours
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Configurable Social Connect Card */}
-            <div className="rounded-3xl bg-slate-900/70 border border-slate-800 p-6 sm:p-8 backdrop-blur-md shadow-xl">
-              <h4 className="text-sm font-Exo font-bold uppercase tracking-wider text-slate-200 mb-4">
+            {/* Social Links */}
+            <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl backdrop-blur-md sm:p-8">
+              <h4 className="mb-4 font-Exo text-sm font-bold uppercase tracking-wider text-slate-200">
                 Professional Networks
               </h4>
-              <div className="flex items-center gap-3">
+
+              <div className="flex flex-wrap items-center gap-3">
                 <motion.a
                   href={githubUrl}
                   target="_blank"
@@ -273,9 +353,9 @@ export default function ContactSection() {
                   aria-label="GitHub Profile"
                   whileHover={shouldReduceMotion ? {} : { scale: 1.08, y: -2 }}
                   whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
-                  className="flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-600 transition-colors text-sm font-medium"
+                  className="flex items-center gap-2.5 rounded-2xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm font-medium text-slate-300 transition-colors hover:border-slate-600 hover:text-white"
                 >
-                  <GithubIcon className="w-4 h-4" />
+                  <GithubIcon className="h-4 w-4" />
                   <span>GitHub</span>
                 </motion.a>
 
@@ -286,9 +366,9 @@ export default function ContactSection() {
                   aria-label="LinkedIn Profile"
                   whileHover={shouldReduceMotion ? {} : { scale: 1.08, y: -2 }}
                   whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
-                  className="flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-blue-400 hover:border-blue-500/40 transition-colors text-sm font-medium"
+                  className="flex items-center gap-2.5 rounded-2xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm font-medium text-slate-300 transition-colors hover:border-blue-500/40 hover:text-blue-400"
                 >
-                  <LinkedinIcon className="w-4 h-4" />
+                  <LinkedinIcon className="h-4 w-4" />
                   <span>LinkedIn</span>
                 </motion.a>
               </div>
@@ -297,33 +377,46 @@ export default function ContactSection() {
 
           {/* Right Column: Contact Form */}
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: 30 }}
-            whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+            initial={
+              shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: 30 }
+            }
+            whileInView={
+              shouldReduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 }
+            }
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="lg:col-span-7"
           >
-            <div className="rounded-3xl bg-slate-900/70 border border-slate-800/80 p-8 sm:p-10 backdrop-blur-xl shadow-2xl relative">
-              <h3 className="text-2xl font-bold text-white mb-2">Send a Direct Message</h3>
-              <p className="text-sm text-slate-400 mb-8">
-                Fill out the form below. I will receive your message and respond directly to your email.
+            <div className="relative rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-2xl backdrop-blur-xl sm:p-10">
+              <h3 className="mb-2 text-2xl font-bold text-white">
+                Send a Direct Message
+              </h3>
+
+              <p className="mb-8 text-sm text-slate-400">
+                Fill out the form below. I will receive your message and
+                respond directly to your email.
               </p>
 
-              {/* Status Alert Banners */}
+              {/* Status Messages */}
               <AnimatePresence>
                 {serverSuccess && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="mb-6 p-4 rounded-2xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-200 flex items-start gap-3"
+                    className="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-500/40 bg-emerald-950/60 p-4 text-emerald-200"
                     role="status"
                     aria-live="polite"
                   >
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+
                     <div>
-                      <p className="text-sm font-semibold text-white">Message Sent Successfully!</p>
-                      <p className="text-xs text-emerald-300/90 mt-0.5">{serverSuccess}</p>
+                      <p className="text-sm font-semibold text-white">
+                        Message Sent Successfully!
+                      </p>
+                      <p className="mt-0.5 text-xs text-emerald-300/90">
+                        {serverSuccess}
+                      </p>
                     </div>
                   </motion.div>
                 )}
@@ -333,30 +426,39 @@ export default function ContactSection() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="mb-6 p-4 rounded-2xl bg-rose-950/60 border border-rose-500/40 text-rose-200 flex items-start gap-3"
+                    className="mb-6 flex items-start gap-3 rounded-2xl border border-rose-500/40 bg-rose-950/60 p-4 text-rose-200"
                     role="alert"
                     aria-live="assertive"
                   >
-                    <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+                    <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
+
                     <div>
-                      <p className="text-sm font-semibold text-white">Submission Failed</p>
-                      <p className="text-xs text-rose-300/90 mt-0.5">{serverError}</p>
+                      <p className="text-sm font-semibold text-white">
+                        Submission Failed
+                      </p>
+                      <p className="mt-0.5 text-xs text-rose-300/90">
+                        {serverError}
+                      </p>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              {/* Form Element */}
+              {/* Contact Form */}
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {/* Full Name Field */}
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  {/* Name */}
                   <div>
                     <label
                       htmlFor="contact-name"
-                      className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-200"
                     >
-                      Full Name <span className="text-cyan-400" aria-hidden="true">*</span>
+                      Full Name{" "}
+                      <span className="text-cyan-400" aria-hidden="true">
+                        *
+                      </span>
                     </label>
+
                     <input
                       id="contact-name"
                       name="name"
@@ -367,30 +469,37 @@ export default function ContactSection() {
                       onChange={(e) => handleChange("name", e.target.value)}
                       onBlur={() => handleBlur("name")}
                       aria-invalid={!!errors.name}
-                      aria-describedby={errors.name ? "name-error" : undefined}
+                      aria-describedby={
+                        errors.name ? "name-error" : undefined
+                      }
                       placeholder="Jane Doe"
-                      className={`w-full px-4 py-3.5 rounded-xl bg-slate-950 border text-white placeholder-slate-500 text-sm transition-all duration-200 focus:outline-none ${
-                        errors.name
-                          ? "border-rose-500/70 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
-                          : "border-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
-                      }`}
+                      className={inputClass("name")}
                     />
+
                     {errors.name && (
-                      <p id="name-error" role="alert" className="mt-1.5 text-xs text-rose-400 flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <p
+                        id="name-error"
+                        role="alert"
+                        className="mt-1.5 flex items-center gap-1 text-xs text-rose-400"
+                      >
+                        <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         <span>{errors.name}</span>
                       </p>
                     )}
                   </div>
 
-                  {/* Email Address Field */}
+                  {/* Email */}
                   <div>
                     <label
                       htmlFor="contact-email"
-                      className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-200"
                     >
-                      Email Address <span className="text-cyan-400" aria-hidden="true">*</span>
+                      Email Address{" "}
+                      <span className="text-cyan-400" aria-hidden="true">
+                        *
+                      </span>
                     </label>
+
                     <input
                       id="contact-email"
                       name="email"
@@ -401,31 +510,38 @@ export default function ContactSection() {
                       onChange={(e) => handleChange("email", e.target.value)}
                       onBlur={() => handleBlur("email")}
                       aria-invalid={!!errors.email}
-                      aria-describedby={errors.email ? "email-error" : undefined}
+                      aria-describedby={
+                        errors.email ? "email-error" : undefined
+                      }
                       placeholder="jane@example.com"
-                      className={`w-full px-4 py-3.5 rounded-xl bg-slate-950 border text-white placeholder-slate-500 text-sm transition-all duration-200 focus:outline-none ${
-                        errors.email
-                          ? "border-rose-500/70 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
-                          : "border-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
-                      }`}
+                      className={inputClass("email")}
                     />
+
                     {errors.email && (
-                      <p id="email-error" role="alert" className="mt-1.5 text-xs text-rose-400 flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <p
+                        id="email-error"
+                        role="alert"
+                        className="mt-1.5 flex items-center gap-1 text-xs text-rose-400"
+                      >
+                        <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         <span>{errors.email}</span>
                       </p>
                     )}
                   </div>
                 </div>
 
-                {/* Subject Field */}
+                {/* Subject */}
                 <div>
                   <label
                     htmlFor="contact-subject"
-                    className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2"
+                    className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-200"
                   >
-                    Subject <span className="text-cyan-400" aria-hidden="true">*</span>
+                    Subject{" "}
+                    <span className="text-cyan-400" aria-hidden="true">
+                      *
+                    </span>
                   </label>
+
                   <input
                     id="contact-subject"
                     name="subject"
@@ -435,30 +551,37 @@ export default function ContactSection() {
                     onChange={(e) => handleChange("subject", e.target.value)}
                     onBlur={() => handleBlur("subject")}
                     aria-invalid={!!errors.subject}
-                    aria-describedby={errors.subject ? "subject-error" : undefined}
+                    aria-describedby={
+                      errors.subject ? "subject-error" : undefined
+                    }
                     placeholder="Project Inquiry / Collaboration"
-                    className={`w-full px-4 py-3.5 rounded-xl bg-slate-950 border text-white placeholder-slate-500 text-sm transition-all duration-200 focus:outline-none ${
-                      errors.subject
-                        ? "border-rose-500/70 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
-                        : "border-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
-                    }`}
+                    className={inputClass("subject")}
                   />
+
                   {errors.subject && (
-                    <p id="subject-error" role="alert" className="mt-1.5 text-xs text-rose-400 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <p
+                      id="subject-error"
+                      role="alert"
+                      className="mt-1.5 flex items-center gap-1 text-xs text-rose-400"
+                    >
+                      <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                       <span>{errors.subject}</span>
                     </p>
                   )}
                 </div>
 
-                {/* Message Field */}
+                {/* Message */}
                 <div>
                   <label
                     htmlFor="contact-message"
-                    className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2"
+                    className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-200"
                   >
-                    Message <span className="text-cyan-400" aria-hidden="true">*</span>
+                    Message{" "}
+                    <span className="text-cyan-400" aria-hidden="true">
+                      *
+                    </span>
                   </label>
+
                   <textarea
                     id="contact-message"
                     name="message"
@@ -468,40 +591,51 @@ export default function ContactSection() {
                     onChange={(e) => handleChange("message", e.target.value)}
                     onBlur={() => handleBlur("message")}
                     aria-invalid={!!errors.message}
-                    aria-describedby={errors.message ? "message-error" : undefined}
+                    aria-describedby={
+                      errors.message ? "message-error" : undefined
+                    }
                     placeholder="Tell me about your project, timeline, or what you'd like to discuss..."
-                    className={`w-full px-4 py-3.5 rounded-xl bg-slate-950 border text-white placeholder-slate-500 text-sm transition-all duration-200 focus:outline-none resize-none ${
-                      errors.message
-                        ? "border-rose-500/70 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
-                        : "border-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
-                    }`}
+                    className={`${inputClass("message")} resize-none`}
                   />
+
                   {errors.message && (
-                    <p id="message-error" role="alert" className="mt-1.5 text-xs text-rose-400 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <p
+                      id="message-error"
+                      role="alert"
+                      className="mt-1.5 flex items-center gap-1 text-xs text-rose-400"
+                    >
+                      <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                       <span>{errors.message}</span>
                     </p>
                   )}
                 </div>
 
-                {/* Submit Button */}
+                {/* Submit */}
                 <div className="pt-2">
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    whileHover={shouldReduceMotion || isSubmitting ? {} : { scale: 1.02 }}
-                    whileTap={shouldReduceMotion || isSubmitting ? {} : { scale: 0.98 }}
-                    className="w-full py-4 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200 shadow-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-65 disabled:cursor-not-allowed cursor-pointer"
+                    whileHover={
+                      shouldReduceMotion || isSubmitting
+                        ? {}
+                        : { scale: 1.02 }
+                    }
+                    whileTap={
+                      shouldReduceMotion || isSubmitting
+                        ? {}
+                        : { scale: 0.98 }
+                    }
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-cyan-500/25 transition-all duration-200 hover:from-cyan-400 hover:to-blue-500 hover:shadow-cyan-500/40 disabled:cursor-not-allowed disabled:opacity-65"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="h-4 w-4 animate-spin" />
                         <span>Sending Message...</span>
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
                         <span>Send Message</span>
-                        <Send className="w-4 h-4" />
+                        <Send className="h-4 w-4" />
                       </span>
                     )}
                   </motion.button>

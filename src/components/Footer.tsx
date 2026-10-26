@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
@@ -11,40 +12,52 @@ const QUICK_LINKS = [
 ];
 
 export default function Footer() {
-  const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/rijon-swarnaker";
-  const linkedinUrl = process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com/in/rijon-swarnaker/";
-  const emailUrl = "mailto:rijonswarnaker@gmail.com";
+  const githubUrl =
+    process.env.NEXT_PUBLIC_GITHUB_URL ||
+    "https://github.com/swagatamondalahona";
+
+  const linkedinUrl =
+    process.env.NEXT_PUBLIC_LINKEDIN_URL ||
+    "https://www.linkedin.com/in/swagatamondalahona/";
+
+  const emailUrl = "mailto:swagatamondal682@gmail.com";
 
   return (
-    <footer className="relative border-t border-slate-800/80 bg-slate-950/90 backdrop-blur-md pt-5 pb-5 overflow-hidden">
-      {/* Ambient background glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-20 bg-cyan-500/10 blur-3xl pointer-events-none rounded-full" />
+    <footer className="relative overflow-hidden border-t border-slate-800/80 bg-slate-950/90 pt-5 pb-5 backdrop-blur-md">
+      {/* Ambient Background Glow */}
+      <div className="pointer-events-none absolute top-0 left-1/2 h-20 w-96 -translate-x-1/2 rounded-full bg-cyan-500/10 blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-3  md:grid-cols-12 gap-10 items-start">
-          {/* Brand & Tagline (5 cols) */}
-          <div className="col-span-2 md:col-span-5 space-y-1">
-            <a href="#home" className="inline-flex items-center gap-2 group focus:outline-none">
-              <span className="text-2xl font-Exo font-Merienda font-extrabold tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-                Rijon<span className="text-cyan-400">.</span>
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-3 items-start gap-10 md:grid-cols-12">
+          {/* Brand & Tagline */}
+          <div className="col-span-2 space-y-1 md:col-span-5">
+            <a
+              href="/"
+              aria-label="Swagata Mondal Home"
+              className="group inline-flex items-center gap-2 focus:outline-none"
+            >
+              <span className="font-Exo text-2xl font-extrabold tracking-tight text-white transition-colors group-hover:text-cyan-400">
+                Swagata<span className="text-cyan-400">.</span>
               </span>
             </a>
-            <p className="text-sm  font-Space-Grotesk text-slate-300 max-w-sm font-medium leading-relaxed">
+
+            <p className="max-w-sm font-Space-Grotesk text-sm leading-relaxed font-medium text-slate-300">
               Learning, Building, <br /> and Growing Through Code.
             </p>
           </div>
 
-          {/* Quick Links (4 cols) */}
-          <div className="md:col-span-4 hidden md:block space-y-3">
-            <h3 className="text-xs font-bold font-Exo uppercase tracking-wider text-slate-300">
+          {/* Quick Links */}
+          <div className="hidden space-y-3 md:col-span-4 md:block">
+            <h3 className="font-Exo text-xs font-bold uppercase tracking-wider text-slate-300">
               Quick Links
             </h3>
-            <ul className="flex flex-wrap gap-x-6 font-Share-Tech gap-y-2.5">
+
+            <ul className="flex flex-wrap gap-x-6 gap-y-2.5 font-Share-Tech">
               {QUICK_LINKS.map((link) => (
                 <li key={link.name}>
                   <a
                     href={link.href}
-                    className="text-sm text-slate-300 hover:text-cyan-400 transition-colors duration-200"
+                    className="text-sm text-slate-300 transition-colors duration-200 hover:text-cyan-400"
                   >
                     {link.name}
                   </a>
@@ -53,41 +66,52 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social Links (3 cols) */}
-          <div className="md:col-span-3 space-y-3 text-right">
-            <h3 className="text-xs font-bold font-Exo uppercase tracking-wider text-slate-300">
+          {/* Social Links */}
+          <div className="space-y-3 text-right md:col-span-3">
+            <h3 className="font-Exo text-xs font-bold uppercase tracking-wider text-slate-300">
               Connect
             </h3>
+
             <div className="flex items-center gap-3 md:justify-end">
+              {/* GitHub */}
               <a
                 href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub Profile"
-                className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-white hover:border-slate-600 hover:bg-slate-850 hover:-translate-y-0.5 transition-all duration-200"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:bg-slate-800 hover:text-white"
               >
-                <GithubIcon className="w-4 h-4" />
+                <GithubIcon className="h-4 w-4" />
               </a>
 
+              {/* LinkedIn */}
               <a
                 href={linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn Profile"
-                className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-blue-400 hover:border-blue-500/40 hover:bg-slate-850 hover:-translate-y-0.5 transition-all duration-200"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-500/40 hover:bg-slate-800 hover:text-blue-400"
               >
-                <LinkedinIcon className="w-4 h-4" />
+                <LinkedinIcon className="h-4 w-4" />
               </a>
 
+              {/* Email */}
               <a
                 href={emailUrl}
-                aria-label="Send Email to rijonswarnaker@gmail.com"
-                className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-cyan-400 hover:border-cyan-500/40 hover:bg-slate-850 hover:-translate-y-0.5 transition-all duration-200"
+                aria-label="Send Email to swagatamondal682@gmail.com"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:bg-slate-800 hover:text-cyan-400"
               >
-                <Mail className="w-4 h-4" />
+                <Mail className="h-4 w-4" />
               </a>
             </div>
           </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="mt-6 border-t border-slate-800/70 pt-4 text-center">
+          <p className="font-Space-Grotesk text-xs text-slate-500">
+            © {new Date().getFullYear()} Swagata Mondal. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
