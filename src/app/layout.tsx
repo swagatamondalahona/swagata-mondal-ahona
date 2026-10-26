@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Exo_2, Geist, Geist_Mono,  Share_Tech, Space_Grotesk } from "next/font/google";
+import { Exo_2, Geist, Geist_Mono, Share_Tech, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import NavBer from "@/components/NavBer";
 import Footer from "@/components/Footer";
@@ -21,13 +21,13 @@ const spaceGrotesk = Space_Grotesk({
 
 const geistExo = Exo_2({
   subsets: ["latin"],
-  variable: "--font-exo", 
+  variable: "--font-exo",
 });
 
 const shareTech = Share_Tech({
-  weight: "400", 
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-share-tech", 
+  variable: "--font-share-tech",
 });
 
 
@@ -35,8 +35,8 @@ const shareTech = Share_Tech({
 
 
 export const metadata: Metadata = {
-  title: "Rijon Swarnaker | Full-Stack Developer",
-  description: "Personal portfolio of Rijon Chandra Swarnaker - Computer Science student & Aspiring Full-Stack Developer building modern web experiences.",
+  title: "Swagata Mondal Ahona | Full-Stack Developer",
+  description: "Personal portfolio of Swagata Mondal Ahona - Computer Science student & Aspiring Full-Stack Developer building modern web experiences.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
