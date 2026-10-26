@@ -59,13 +59,16 @@ const education: EducationItem[] = [
     id: 3,
     title: "Secondary School Certificate",
     subtitle: "Science / General Education",
-    institution: "Jorpukuria High School",
+    institution: "Shymoli Ideal School & College",
     period: "Completed in 2023",
     status: "Completed",
     description:
-      "Completed secondary education with a GPA of 3.94.",
+      "Completed secondary education with a GPA of 4.14.",
     icon: BookOpen,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDW8rQSHqpnqkHomVrxyyp0Pa7ybam0LwzGahefPTbFw&s",
+
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgnaeX6EEsHG3yZ5CFuvTlChAMRBjrUcJi5mvsTKVNXtLWiKvjPeysYhnp&s=10",
+
+
     accent: "violet",
   },
 ];
@@ -183,9 +186,8 @@ export default function EducationSection() {
                     />
                   )}
                   <div
-                    className={`relative flex h-10 w-10 items-center justify-center rounded-full border bg-slate-900 ${accent.node} ${
-                      isCompleted ? "" : accent.glow
-                    }`}
+                    className={`relative flex h-10 w-10 items-center justify-center rounded-full border bg-slate-900 ${accent.node} ${isCompleted ? "" : accent.glow
+                      }`}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
@@ -194,11 +196,10 @@ export default function EducationSection() {
                 {/* Connector to card (desktop only) */}
                 <div
                   aria-hidden="true"
-                  className={`absolute top-11 hidden h-px w-7 md:block ${
-                    isLeft
-                      ? "right-[calc(50%+1.25rem)] bg-linear-to-l from-slate-600/70 to-transparent"
-                      : "left-[calc(50%+1.25rem)] bg-linear-to-r from-slate-600/70 to-transparent"
-                  }`}
+                  className={`absolute top-11 hidden h-px w-7 md:block ${isLeft
+                    ? "right-[calc(50%+1.25rem)] bg-linear-to-l from-slate-600/70 to-transparent"
+                    : "left-[calc(50%+1.25rem)] bg-linear-to-r from-slate-600/70 to-transparent"
+                    }`}
                 />
 
                 {/* Card */}
@@ -213,11 +214,9 @@ export default function EducationSection() {
                       ? { duration: 0 }
                       : { duration: 0.6, ease: EASE }
                   }
-                  className={`rounded-2xl border bg-slate-900/60 p-5 backdrop-blur-sm transition-colors duration-300 sm:p-6 md:w-[calc(50%-3rem)] ${
-                    accent.cardHover
-                  } ${isCompleted ? "border-slate-800/80" : accent.cardActive} ${
-                    isLeft ? "" : "md:ml-auto"
-                  }`}
+                  className={`rounded-2xl border bg-slate-900/60 p-5 backdrop-blur-sm transition-colors duration-300 sm:p-6 md:w-[calc(50%-3rem)] ${accent.cardHover
+                    } ${isCompleted ? "border-slate-800/80" : accent.cardActive} ${isLeft ? "" : "md:ml-auto"
+                    }`}
                 >
                   {/* Period + status */}
                   <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -229,11 +228,10 @@ export default function EducationSection() {
                     </span>
 
                     <span
-                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-Share-Tech text-xs font-medium ${
-                        isCompleted
-                          ? "border-slate-700/80 bg-slate-800/60 text-slate-400"
-                          : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                      }`}
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-Share-Tech text-xs font-medium ${isCompleted
+                        ? "border-slate-700/80 bg-slate-800/60 text-slate-400"
+                        : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                        }`}
                     >
                       {isCompleted ? (
                         <Check className="h-3 w-3" />
