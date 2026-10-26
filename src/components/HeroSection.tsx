@@ -114,12 +114,7 @@ export default function HeroSection() {
             </div>
 
             {/* 2. Bottom-Left Card (Computer Engineering) */}
-            <div className="absolute -bottom-5 -left-5 rounded-2xl border border-white/10 bg-zinc-900/90 px-5 py-3 shadow-xl backdrop-blur z-20">
 
-              <p className="mt-1 text-xs text-zinc-400">
-                Learning · Building · Growing
-              </p>
-            </div>
 
             {/* 3. Bottom-Right Floating Badge (Design) */}
             <div className="absolute -bottom-6 -right-6 flex items-center gap-3 rounded-2xl border border-white/10 bg-zinc-900/90 px-4 py-3 shadow-xl backdrop-blur z-20">
