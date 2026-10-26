@@ -110,7 +110,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="mt-6 border-t border-slate-800/70 pt-4 text-center">
           <p className="font-Space-Grotesk text-xs text-slate-500">
-            © {new Date().getFullYear()} Swagata Mondal. All rights reserved.
+            © 2026 Swagata Mondal. All rights reserved.
           </p>
         </div>
       </div>
