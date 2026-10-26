@@ -115,9 +115,7 @@ export default function HeroSection() {
 
             {/* 2. Bottom-Left Card (Computer Engineering) */}
             <div className="absolute -bottom-5 -left-5 rounded-2xl border border-white/10 bg-zinc-900/90 px-5 py-3 shadow-xl backdrop-blur z-20">
-              <p className="text-sm font-semibold text-white">
-                Computer Engineering
-              </p>
+
               <p className="mt-1 text-xs text-zinc-400">
                 Learning · Building · Growing
               </p>
