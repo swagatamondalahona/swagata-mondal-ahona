@@ -59,7 +59,7 @@ export default function HeroSection() {
             </Link>
 
             <Link
-              href="#contact"
+              href="contact"
               className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-6 py-3 font-semibold text-white transition hover:border-emerald-400 hover:text-emerald-400"
             >
               Contact Me
