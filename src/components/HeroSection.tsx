@@ -45,7 +45,7 @@ export default function HeroSection() {
           <p className="mx-auto mt-5 max-w-xl text-base leading-8 text-zinc-400 lg:mx-0">
             I&apos;m a Diploma in Computer Engineering student passionate
             about building modern, responsive, and user-friendly web
-            applications with React, Next.js, TypeScript, and Tailwind CSS.
+            applications with React, Next.js, JavaScript, and Tailwind CSS.
           </p>
 
           {/* Action buttons */}
@@ -59,7 +59,7 @@ export default function HeroSection() {
             </Link>
 
             <Link
-              href="mailto:swagatamondal682@gmail.com"
+              href="#contact"
               className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-6 py-3 font-semibold text-white transition hover:border-emerald-400 hover:text-emerald-400"
             >
               Contact Me
@@ -112,9 +112,6 @@ export default function HeroSection() {
                 <p className="text-sm font-semibold text-white">Full-Stack Developer</p>
               </div>
             </div>
-
-            {/* 2. Bottom-Left Card (Computer Engineering) */}
-
 
             {/* 3. Bottom-Right Floating Badge (Design) */}
             <div className="absolute -bottom-6 -right-6 flex items-center gap-3 rounded-2xl border border-white/10 bg-zinc-900/90 px-4 py-3 shadow-xl backdrop-blur z-20">
